@@ -1,3 +1,5 @@
+package com.w3epic.fileencryptionhelper;
+
 // http://www.macs.hw.ac.uk/~ml355/lore/pkencryption.htm
 
 public class Main {	
