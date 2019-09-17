@@ -20,10 +20,10 @@ class FileEncryptionHelper {
 	
 	public boolean encryptFile(String receiverPublicKeyFilePath, 
 			String fileToBeEncryptedPath, String encryptedFilePath) {
-		File publicKeyFile1 	= new File(receiverPublicKeyFilePath);		// in
+		File publicKeyFile1 			= new File(receiverPublicKeyFilePath);		// in
 		File publicKeyToBeSharedFile 	= new File("./shared_public_key.der");		// out
-		File fileToEncrypt 		= new File(fileToBeEncryptedPath);
-		File encryptedFile 		= new File(encryptedFilePath);
+		File fileToEncrypt 				= new File(fileToBeEncryptedPath);
+		File encryptedFile 				= new File(encryptedFilePath);
 		
 		try {
 			// to encrypt a file
@@ -36,11 +36,21 @@ class FileEncryptionHelper {
 			fos.write(longToBytes(encryptedFile.length()));
 			
 			// append encrypted file to the temp file
-			byte[] encryptedFileBytes = Files.readAllBytes(encryptedFile.toPath());
+			//byte[] encryptedFileBytes = Files.readAllBytes(encryptedFile.toPath());
+			FileInputStream fis = new FileInputStream(encryptedFile);
+			byte[] encryptedFileBytes = new byte[(int) encryptedFile.length()];
+			fis.read(encryptedFileBytes);
+			fis.close();
+			
 			fos.write(encryptedFileBytes);
 			
 			// append public key to the temp file
-			byte[] sharedPublicKeyFileBytes = Files.readAllBytes(publicKeyToBeSharedFile.toPath());
+			//byte[] sharedPublicKeyFileBytes = Files.readAllBytes(publicKeyToBeSharedFile.toPath());
+			fis = new FileInputStream(publicKeyToBeSharedFile);
+			byte[] sharedPublicKeyFileBytes = new byte[(int) publicKeyToBeSharedFile.length()];
+			fis.read(sharedPublicKeyFileBytes);
+			fis.close();
+			
 			fos.write(sharedPublicKeyFileBytes);
 			fos.close();
 			
@@ -69,7 +79,7 @@ class FileEncryptionHelper {
 			File fileIn = new File(encryptedFilePath);
 			FileInputStream fis = new FileInputStream(fileIn);
 			
-			int bufLen = Long.SIZE / Byte.SIZE;
+			int bufLen = 8;//Long.SIZE / Byte.SIZE;
 			byte[] buffer = new byte[bufLen];
 			fis.read(buffer);
 			
@@ -104,8 +114,8 @@ class FileEncryptionHelper {
 			secure.decrypt(encryptedFile, unencryptedFile);
 			
 			// delete temp files
-			sharedPublicKeyFile.delete();
-			encryptedFile.delete();
+//			sharedPublicKeyFile.delete();
+//			encryptedFile.delete();
 			
 			return true;
 		} catch (GeneralSecurityException e) {

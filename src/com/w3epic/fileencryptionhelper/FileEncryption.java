@@ -23,7 +23,8 @@ public class FileEncryption {
 	 */
 	public FileEncryption() throws GeneralSecurityException {
 		// create RSA public key cipher
-		pkCipher = Cipher.getInstance("RSA");
+		// Only RSA not working for decryption from different device
+		pkCipher = Cipher.getInstance("RSA/ECB/PKCS1Padding");
 	    // create AES shared key cipher
 	    aesCipher = Cipher.getInstance("AES");
 	}
